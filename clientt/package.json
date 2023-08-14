@@ -42,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "react-grid-carousel": {
+      "react": "16.12.0"
+    }
   }
 }
