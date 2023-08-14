@@ -1,10 +1,8 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import Buku2 from "../../assest/img/buku2.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useQuery } from "react-query";
 import { API } from "../../config/Api";
-import Container from "react-bootstrap/esm/Container";
 
 function Books() {
   const navigate = useNavigate();
@@ -24,6 +22,14 @@ function Books() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const convertRupiah = (price) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
   };
   return (
     <div className="pb-5">
@@ -58,7 +64,7 @@ function Books() {
                     style={{ fontFamily: "Avenir" }}
                     className="text-success"
                   >
-                    {e.price}
+                    {convertRupiah(e.price)}
                   </Card.Text>
                 </Card.Body>
               </Card>

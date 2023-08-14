@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"waysbooks/database"
 	"waysbooks/pkg/mysql"
@@ -23,10 +24,7 @@ func main() {
 	// 	Secure: true,
 	//   }
 
-	errEnv := godotenv.Load()
-	if errEnv != nil {
-		panic("Failed to load env file")
-	}
+	godotenv.Load()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
@@ -49,7 +47,7 @@ func main() {
 	// 	  return c.JSON(http.StatusOK, data)
 	// })
 
-	// var PORT = os.Getenv("PORT");
+	var PORT = os.Getenv("PORT")
 
 	mysql.DatabaseInit()
 	database.RunMigration()
@@ -57,5 +55,5 @@ func main() {
 	routes.RouteInit(e.Group("/api/v1"))
 
 	fmt.Println("Server Running on Localhost : 5000 ")
-	e.Logger.Fatal(e.Start("localhost:5008"))
+	e.Logger.Fatal(e.Start(":" + PORT))
 }

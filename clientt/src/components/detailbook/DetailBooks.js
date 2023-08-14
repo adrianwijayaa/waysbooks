@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
-import Buku3 from "../../assest/img/buku3.png";
 import Button from "react-bootstrap/esm/Button";
 import CartP from "../../assest/img/cartp.png";
 import Container from "react-bootstrap/esm/Container";
@@ -33,6 +32,14 @@ function DetailBooks() {
     headers: {
       "Content-type": "multipart/form-data",
     },
+  };
+
+  const convertRupiah = (price) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
   const addBook = useMutation(async (id) => {
@@ -86,7 +93,7 @@ function DetailBooks() {
               </div>
               <div>
                 <h4>Price</h4>
-                <p className="text-success">{books?.price}</p>
+                <p className="text-success">{convertRupiah(books?.price)}</p>
               </div>
             </Col>
           </Row>

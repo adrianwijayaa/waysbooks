@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import Buku1 from "../../assest/img/buku1.png";
 import Trash from "../../assest/img/trash.png";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
@@ -8,13 +8,16 @@ import Pay from "../../assest/img/pay.png";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { API } from "../../config/Api";
+import { API, setAuthToken } from "../../config/Api";
 import { Modal } from "react-bootstrap";
 
 function ShowCart() {
+  setAuthToken(localStorage.token) 
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  
+    
   // const [form, setForm] = useState({
   //   id: "",
   //   fullname: "",
@@ -28,6 +31,14 @@ function ShowCart() {
     setDeleteId(id);
     console.log("delete id", deleteId);
     setOpen3(true);
+  };
+
+  const convertRupiah = (price) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
   const deleteById = useMutation(async (id) => {
@@ -60,30 +71,27 @@ function ShowCart() {
     return response.data.data;
   });
 
-  let param = useParams();
-  let id = parseInt(param.id);
+  // let { data: profile } = useQuery("/profileCache32", async () => {
+  //   const response = await API.get(`/transactionbyid/${id}`);
+  //   console.log("ini log response profile: ", response);
+  //   return response.data.data;
+  // });
 
-  let { data: profile } = useQuery("/profileCache32", async () => {
-    const response = await API.get(`/transactionbyid/${id}`);
-    console.log("ini log response profile: ", response);
-    return response.data.data;
-  });
+  // const totalPrice = myBooks?.transaction
+  //   ? myBooks?.transaction.reduce(
+  //       (accumulator, currentValue) =>
+  //         accumulator + parseFloat(currentValue.booksPurchased?.price),
+  //       0
+  //     )
+  //   : 0;
 
-  const totalPrice = myBooks?.transaction
-    ? myBooks?.transaction.reduce(
-        (accumulator, currentValue) =>
-          accumulator + parseFloat(currentValue.booksPurchased?.price),
-        0
-      )
-    : 0;
-
-  const getID = myBooks?.transaction
-    ? myBooks?.transaction.reduce(
-        (accumulator, currentValue) =>
-          accumulator + parseFloat(currentValue.id),
-        0
-      )
-    : 0;
+  // const getID = myBooks?.transaction
+  //   ? myBooks?.transaction.reduce(
+  //       (accumulator, currentValue) =>
+  //         accumulator + parseFloat(currentValue.id),
+  //       0
+  //     )
+    // : 0;
 
   // targetName
 
@@ -103,14 +111,14 @@ function ShowCart() {
   //   }
   // }, null);
 
-  console.log("ini total price : ", totalPrice);
-  const totalQty = myBooks?.transaction
-    ? myBooks?.transaction.reduce(
-        (accumulator, currentValue) =>
-          accumulator + parseFloat(currentValue.qty),
-        0
-      )
-    : 0;
+  // console.log("ini total price : ", totalPrice);
+  // const totalQty = myBooks?.transaction
+  //   ? myBooks?.transaction.reduce(
+  //       (accumulator, currentValue) =>
+  //         accumulator + parseFloat(currentValue.qty),
+  //       0
+  //     )
+  //   : 0;
 
   let ID = myBooks;
   console.log("ini my books :", ID);
@@ -122,7 +130,7 @@ function ShowCart() {
   //   price: myBooks?.booksPurchased,
   // };
 
-  console.log("ini total price", totalPrice);
+  // console.log("ini total price", totalPrice);
   console.log(myBooks?.transaction);
 
   // const handleSetForm = () => {
@@ -137,59 +145,73 @@ function ShowCart() {
   let cobaid = myBooks?.transaction?.book_id;
   console.log("ini coba id: ", cobaid);
 
-  const handleBuy = useMutation(async () => {
+  // let param = useParams();
+  //   let id = parseInt(param.id);
+
+  const buyBook = async (id) => {
     try {
-      const form = {
-        id: profile.id,
-        fullname: profile?.name,
-        email: profile?.email,
-        price: totalPrice,
-      };
-      console.log("ini form :", form);
-
-      const response = await API.post("/payment", form);
-      console.log("transaction success :", response);
-
-      const token = response.data.data.token;
-      window.snap.pay(token, {
-        onSuccess: function (result) {
-          /* You may add your own implementation here */
-          console.log(result);
-          navigate("/cart");
-        },
-        onPending: function (result) {
-          /* You may add your own implementation here */
-          console.log(result);
-          navigate("/cart");
-        },
-        onError: function (result) {
-          /* You may add your own implementation here */
-          console.log(result);
-          navigate("/cart");
-        },
-        onClose: function () {
-          /* You may add your own implementation here */
-          alert("you closed the popup without finishing the payment");
-        },
-      });
+      const response = await API.get(`/transactionbyid/${id}`);
+      console.log("ini payment 2 :", response);
+      navigate(`/payment/${id}`);
+      return response.data.data
     } catch (error) {
-      console.log("transaction failed : ", error);
+      console.log(error);
     }
-  });
+  }
 
-  useEffect(() => {
-    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-    const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+  // const handleBuy = useMutation(async () => {
+  //   try {
+  //     const form = {
+  //       id: profile.id,
+  //       fullname: profile?.name,
+  //       email: profile?.email,
+  //       price: totalPrice,
+  //     };
+  //     console.log("ini form :", form);
 
-    let scriptTag = document.createElement("script");
-    scriptTag.src = midtransScriptUrl;
-    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+  //     const response = await API.post("/payment", form);
+  //     console.log("transaction success :", response);
 
-    document.body.appendChild(scriptTag);
-    return () => {
-      document.body.removeChild(scriptTag);
-    };
-  }, []);
+  //     const token = response.data.data.token;
+  //     window.snap.pay(token, {
+  //       onSuccess: function (result) {
+  //         /* You may add your own implementation here */
+  //         console.log(result);
+  //         navigate("/cart");
+  //       },
+  //       onPending: function (result) {
+  //         /* You may add your own implementation here */
+  //         console.log(result);
+  //         navigate("/cart");
+  //       },
+  //       onError: function (result) {
+  //         /* You may add your own implementation here */
+  //         console.log(result);
+  //         navigate("/cart");
+  //       },
+  //       onClose: function () {
+  //         /* You may add your own implementation here */
+  //         alert("you closed the popup without finishing the payment");
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log("transaction failed : ", error);
+  //   }
+  // });
+
+  // useEffect(() => {
+  //   const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+  //   const myMidtransClientKey = process.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+
+  //   let scriptTag = document.createElement("script");
+  //   scriptTag.src = midtransScriptUrl;
+  //   scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+  //   document.body.appendChild(scriptTag);
+  //   return () => {
+  //     document.body.removeChild(scriptTag);
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   handleSetForm();
@@ -200,11 +222,11 @@ function ShowCart() {
     <div>
       <Container style={{ marginTop: "130px" }}>
         <Row xl={12}>
-          <Col xs={8}>
+          <Col xs={12}>
             <h1 style={{ fontFamily: "Times" }}>My Cart</h1>
             <h4>Review Your Order</h4>
             <div className="mt-4 pt-4 border-top border-bottom border-black">
-              {myBooks?.transaction?.map((data, index) => {
+              {myBooks?.map((data, index) => {
                 return (
                   <div
                     key={index}
@@ -225,8 +247,11 @@ function ShowCart() {
                           {data.booksPurchased?.author}
                         </p>
                         <h5 className="text-success">
-                          {data.booksPurchased?.price}
+                          {convertRupiah(data.booksPurchased?.price)}
                         </h5>
+                        <div className="mt-5">
+                          <Button onClick={buyBook(data.id)} variant="dark">Payment</Button>
+                        </div>
                       </div>
                     </div>
                     <div>
@@ -242,7 +267,7 @@ function ShowCart() {
               })}
             </div>
           </Col>
-          <Col xs={4}>
+          {/* <Col xs={4}>
             <br />
             <br />
             <br />
@@ -250,7 +275,7 @@ function ShowCart() {
             <div className="border-top border-bottom border-black mt-3 pt-3 mb-3">
               <div className="d-flex justify-content-between">
                 <p>Subtotal</p>
-                <p>Rp. {totalPrice}</p>
+                <p>{convertRupiah(totalPrice)}</p>
               </div>
               <div className="d-flex justify-content-between">
                 <p>Qty</p>
@@ -260,7 +285,7 @@ function ShowCart() {
             <div>
               <div className="d-flex justify-content-between">
                 <p>Total</p>
-                <p className="text-success ">Rp. {totalPrice}</p>
+                <p className="text-success ">{convertRupiah(totalPrice)}</p>
               </div>
             </div>
             <div className="d-flex justify-content-end mb-3">
@@ -275,7 +300,7 @@ function ShowCart() {
                 Pay
               </Button>
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </Container>
       {open3 && (

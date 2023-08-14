@@ -17,6 +17,7 @@ import {
   PrivateRouteAdmin,
   PrivateRouteUser,
 } from "./privateroute/PrivateRoute";
+import Payment from "./pages/Payment";
 
 function App() {
   const [state, dispatch] = useContext(UserContext);
@@ -74,6 +75,7 @@ function App() {
               <Route exact path="/complainadmin" element={<ComplainAdmin />} />
             </Route>
             <Route element={<PrivateRouteAdmin />}>
+              <Route exact path="/payment/:id" element={<Payment/>}/>
               <Route exact path="/detailbook/:id" element={<DetailBook />} />
               <Route exact path="/cart" element={<Cart />} />
               <Route exact path="/profile" element={<Profile />} />

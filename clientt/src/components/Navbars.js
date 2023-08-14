@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import ModalLogin from "./modal/ModalLogin";
 import ModalRegister from "./modal/ModalRegister";
 import Cart from "../assest/img/cart.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
@@ -59,7 +59,7 @@ function Navbars() {
         className={colorChange ? "navbar colorChange" : "navbar"}
         fixed="top"
       >
-        <Container className="mt-4 pb-4">
+        <Container>
           <img
             style={{ cursor: "pointer" }}
             onClick={home}
