@@ -1,7 +1,7 @@
 import React from "react";
 import Cards from "./Cards";
 import Container from "react-bootstrap/esm/Container";
-import Carousel from "react-grid-carousel";
+import Carousel from "react-bootstrap/Carousel";
 import "../../App.css";
 
 function Carousels() {
@@ -25,18 +25,23 @@ function Carousels() {
             className="d-flex mt-5 pt-2"
           >
             <Carousel.Item>
-              <div className="ms-5">
-                <Cards />
+              <div className="d-flex justify-content-evenly">
+                <div>
+                  <Cards />
+                </div>
+                <div>
+                  <Cards />
+                </div>
               </div>
             </Carousel.Item>
             <Carousel.Item>
-              <div className="ms-4">
-                <Cards />
-              </div>
-            </Carousel.Item>
-            <Carousel.Item>
-              <div className="ms-5">
-                <Cards />
+              <div className="d-flex justify-content-evenly">
+                <div>
+                  <Cards />
+                </div>
+                <div>
+                  <Cards />
+                </div>
               </div>
             </Carousel.Item>
           </Carousel>
